@@ -1,4 +1,5 @@
 import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import '@testing-library/jest-dom';
 
 import App from "../App";
@@ -67,25 +68,78 @@ test("displays the correct links", () => {
 // Newsletter Form - Initial State
 test("the form includes text inputs for name and email address", () => {
   // your test code here
+  render(<App />);
+  const name = screen.getByPlaceholderText(/name/i)
+  const emailAddress = screen.getByPlaceholderText(/email address/i)
+  expect(name).toBeInTheDocument();
+  expect(emailAddress).toBeInTheDocument();
 });
 
 test("the form includes three checkboxes to select areas of interest", () => {
   // your test code here
+  render(<App />);
+  const sports = screen.getByRole("checkbox", { name: /sports/i });
+  const musics = screen.getByRole("checkbox", { name: /music/i });
+  const movies = screen.getByRole("checkbox", { name: /movies/i });
+  expect(sports).toBeInTheDocument();
+  expect(musics).toBeInTheDocument();
+  expect(movies).toBeInTheDocument();
 });
 
 test("the checkboxes are initially unchecked", () => {
   // your test code here
+  render(<App />);
+  const sports = screen.getByRole("checkbox", { name: /sports/i });
+  const musics = screen.getByRole("checkbox", { name: /music/i });
+  const movies = screen.getByRole("checkbox", { name: /movies/i });
+  expect(sports).not.toBeChecked();
+  expect(musics).not.toBeChecked();
+  expect(movies).not.toBeChecked();
 });
 
 // Newsletter Form - Adding Responses
 test("the page shows information the user types into the name and email address form fields", () => {
   // your test code here
+  render(<App />);
+
+  const name = screen.getByPlaceholderText(/name/i);
+  userEvent.type(name, "Nick Ren");
+  expect(name).toHaveValue("Nick Ren");
+  
+  const emailAddress = screen.getByPlaceholderText(/email address/i)
+  userEvent.type(emailAddress, "pizzafan@email.com");
+  expect(emailAddress).toHaveValue("pizzafan@email.com");
 });
+
 
 test("checked status of checkboxes changes when user clicks them", () => {
   // your test code here
+  render(<App />);
+  const sports = screen.getByRole("checkbox", { name: /sports/i });
+  userEvent.click(sports);
+  expect(sports).toBeChecked();
+  userEvent.click(sports);
+  expect(sports).not.toBeChecked();
+
+  const musics = screen.getByRole("checkbox", { name: /music/i });
+  userEvent.click(musics);
+  expect(musics).toBeChecked();
+  userEvent.click(musics);
+  expect(musics).not.toBeChecked();
+
+  const movies = screen.getByRole("checkbox", { name: /movies/i });
+  userEvent.click(movies);
+  expect(movies).toBeChecked();
+  userEvent.click(movies);
+  expect(movies).not.toBeChecked();
 });
+
 
 test("a message is displayed when the user clicks the Submit button", () => {
   // your test code here
+  render(<App />);
+  const submit = screen.getByRole("button", { name: /signup to newsletter!/i });
+  expect(submit).toBeInTheDocument()
+  userEvent.click(submit)
+  expect(screen.getByText(/Thanks for suscribing!/i)).toBeInTheDocument();
 });
